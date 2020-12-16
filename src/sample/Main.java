@@ -1,25 +1,24 @@
-/*
-    Author: Domenic Catalano
-    Date: Wednesday, December 9, 2020
-    Program Name: Lesson 13 (ICE 12)
- */
-
 package sample;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+
+import java.io.FileInputStream;
 
 public class Main extends Application
 {
@@ -30,45 +29,91 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Hello World");
 
-        // Step 1: Create a controls
-        Label helloLabel = new Label("Hello, World!");
 
-        Font font = Font.font("Consolas", FontWeight.BOLD, 40);
+        // Step 1 - create one or more control
+        Label imageLabel = new Label("Xbox Series X!");
+
 
         Button clickMeButton = new Button("Click me");
-        clickMeButton.setFont(font);
+        clickMeButton.setStyle("-fx-font-family: Arial");
 
+
+        FileInputStream imagePath = new FileInputStream("src/sample/xboxseriesx.jpg");
+
+        // step 1 for images - is load the image
+        Image xboxSeriesX = new Image(imagePath);
+
+        // step 2 for images - is setup a ImageView to "contain it"
+        ImageView consoleImageView = new ImageView(xboxSeriesX);
+        consoleImageView.setFitWidth(400);
+        consoleImageView.setPreserveRatio(true);
+
+        FileInputStream ps5Path = new FileInputStream("src/sample/ps5.jpg");
+        Image ps5 = new Image(ps5Path);
+
+
+        // Step 1.1 - Configure your controls
+        //Font font = Font.font("Consolas", FontWeight.BOLD, 20);
+        // clickMeButton.setFont(font);
+
+        class ButtonClickHandler implements EventHandler<ActionEvent>
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                imageLabel.setText("PS5!");
+                consoleImageView.setImage(ps5);
+            }
+        }
+
+        clickMeButton.setOnAction(new ButtonClickHandler());
+
+
+        // Step 1.2 - For button controls (or other event-type controls) - set the event
+        /*
         clickMeButton.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent actionEvent)
             {
-                System.out.println("Click Me Button Clicked!");
-
-                helloLabel.setText("Clicked!");
+                imageLabel.setText("PS5!");
+                consoleImageView.setImage(ps5);
             }
         });
+         */
 
-        // Step 2: Create a container
-        //HBox hbox = new HBox(helloLabel);
+        // Step 2 - create a container
+        HBox hbox = new HBox(10, imageLabel);
+        hbox.setStyle("-fx-alignment: center; ");
 
-        //VBox vbox = new VBox(helloLabel, clickMeButton);
+        HBox hbox2 = new HBox(10, consoleImageView);
+
+
+
 
         GridPane gridPane = new GridPane();
 
-        gridPane.add(helloLabel, 1,0);
-        gridPane.add(clickMeButton, 2,1);
+        gridPane.setMinSize(6, 8);
+        gridPane.setVgap(10);
+        gridPane.setHgap(10);
+        gridPane.setPadding(new Insets(10));
 
-        // Step 3: Add layout container to scene
+        gridPane.add(hbox, 0, 0);
+        gridPane.add(hbox2, 0, 1);
+        gridPane.add(consoleImageView, 0, 2);
+        gridPane.add(clickMeButton, 2, 2);
+
+
+        gridPane.setStyle("-fx-border-color: black; -fx-font-size: 20; -fx-font-family: Consolas;");
+
+        // Step 3 - add layout container to scene
         Scene scene = new Scene(gridPane, WIDTH, HEIGHT);
 
-        // Step 4: Add scene to stage
+        // Step 4 - add scene to stage
         primaryStage.setScene(scene);
 
-        // Step 5: Show
         primaryStage.show();
     }
 
